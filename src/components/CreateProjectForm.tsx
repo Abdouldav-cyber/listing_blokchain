@@ -7,7 +7,7 @@ interface CreateProjectFormProps {
     tokenBalance: number;
     creator: string;
     tokenSymbol: string;
-    tokenValue: { fcfa: number }; // Valeur du token uniquement en FCFA
+    tokenValue: { euro: number; dollar: number; fcfa: number }; // Valeur du token dans différentes devises
   }) => void;
 }
 
@@ -17,6 +17,8 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
   const [targetAmount, setTargetAmount] = useState(0);
   const [symbol, setSymbol] = useState('');
   const [creator, setCreator] = useState('');
+  const [tokenValueEuro, setTokenValueEuro] = useState(0); // Valeur du token en Euro
+  const [tokenValueDollar, setTokenValueDollar] = useState(0); // Valeur du token en Dollar
   const [tokenValueFcfa, setTokenValueFcfa] = useState(0); // Valeur du token en FCFA
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,10 +27,10 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
     onProjectCreate({
       name,
       description,
-      tokenBalance: targetAmount,  // Pour simplification, on utilise le targetAmount comme le solde des tokens
+      tokenBalance: targetAmount,  // Utilise targetAmount comme le solde des tokens
       creator,
       tokenSymbol: symbol,
-      tokenValue: { fcfa: tokenValueFcfa }, // Seulement la valeur en FCFA
+      tokenValue: { euro: tokenValueEuro, dollar: tokenValueDollar, fcfa: tokenValueFcfa },
     });
 
     // Réinitialiser le formulaire
@@ -37,7 +39,9 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
     setTargetAmount(0);
     setSymbol('');
     setCreator('');
-    setTokenValueFcfa(0); // Réinitialiser la valeur FCFA
+    setTokenValueEuro(0);
+    setTokenValueDollar(0);
+    setTokenValueFcfa(0);
   };
 
   return (
@@ -103,8 +107,8 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
           />
         </div>
 
-        {/* Supprimer les champs pour la valeur du token en Euro et en Dollar */}
-        {/* <div>
+        {/* Ajout des champs pour la valeur du token */}
+        <div>
           <label htmlFor="tokenValueEuro" className="block text-sm font-medium text-gray-700 mb-2">Valeur du token en Euro</label>
           <input
             min='1'
@@ -128,12 +132,12 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
             onChange={(e) => setTokenValueDollar(Number(e.target.value))}
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-        </div> */}
+        </div>
 
         <div>
           <label htmlFor="tokenValueFcfa" className="block text-sm font-medium text-gray-700 mb-2">Valeur du token en FCFA</label>
           <input
-            min='1'
+            min="1"
             id="tokenValueFcfa"
             type="number"
             placeholder="Valeur du token en FCFA"
