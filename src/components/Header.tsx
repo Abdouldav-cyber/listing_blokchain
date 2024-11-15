@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ connectWallet, account }) => {
           onClick={connectWallet}
           className="bg-blue-700 hover:bg-blue-800 py-2 px-4 rounded-lg"
         >
-          Connexion Entrepreneur
+          Connexion MetaMask
         </button>
       ) : (
         <span className="text-sm">Connecté en tant que {account}</span>
