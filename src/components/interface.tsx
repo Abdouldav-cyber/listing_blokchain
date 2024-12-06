@@ -28,11 +28,15 @@ const Interface: React.FC = () => {
   const [errorOccurred, setErrorOccurred] = useState(false);
 
   const connectWallet = async () => {
-    if (window.ethereum) {
+    if (typeof window !== 'undefined' && window.ethereum) {
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        setAccount(accounts[0]);
-        setWalletConnected(true);
+        const accounts = await window.ethereum.request?.({ method: 'eth_requestAccounts' });
+        if (accounts && Array.isArray(accounts)) {
+          setAccount(accounts[0]);
+          setWalletConnected(true);
+        } else {
+          console.error('Erreur : aucune adresse trouvée.');
+        }
       } catch (err) {
         console.error('Erreur lors de la connexion au portefeuille :', err);
       }
@@ -51,19 +55,10 @@ const Interface: React.FC = () => {
 
   const handleVote = async () => {
     if (selectedProject && voteAmount > 0 && voteAmount <= selectedProject.tokenBalance) {
-      // Simuler une erreur de transaction aléatoire (20% de chance d'erreur)
       const transactionSucceeded = Math.random() > 0.2;
 
       if (!transactionSucceeded) {
         setErrorOccurred(true);
-        setProjects((prevProjects) =>
-          prevProjects.map((project) =>
-            project.name === selectedProject.name
-              ? { ...project, tokenBalance: project.tokenBalance + voteAmount }
-              : project
-          )
-        );
-        setVotes((prevVotes) => prevVotes.filter(vote => vote.investor !== account));
         return;
       }
 
@@ -121,7 +116,7 @@ const Interface: React.FC = () => {
         {userRole === 'investisseur' && (
           <div className="w-full">
             <h2 className="text-4xl shadow-lg rounded-lg bg-blue-700 p-3 w-full font-semibold text-center text-white mb-6">
-              Liste des Projets (POUR LES VOTES DES INVESTISSEURS)
+              Liste des Projets
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
@@ -202,8 +197,8 @@ const Interface: React.FC = () => {
         )}
 
         {errorOccurred && (
-          <div className="mt-8 text-red-600">
-            <p>Une erreur est survenue lors du vote. Votre transaction a été remboursée.</p>
+          <div className="mt-8 p-4 bg-red-200 text-red-800 rounded-lg shadow-md text-center">
+            Une erreur est survenue. Les tokens seront remboursés.
           </div>
         )}
       </div>
