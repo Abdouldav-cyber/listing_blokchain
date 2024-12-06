@@ -7,7 +7,7 @@ interface CreateProjectFormProps {
     tokenBalance: number;
     creator: string;
     tokenSymbol: string;
-    tokenValue: { euro: number; dollar: number; fcfa: number }; // Valeur du token dans différentes devises
+    tokenValue: { fcfa: number }; // Valeur du token uniquement en FCFA
   }) => void;
 }
 
@@ -17,8 +17,6 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
   const [targetAmount, setTargetAmount] = useState(0);
   const [symbol, setSymbol] = useState('');
   const [creator, setCreator] = useState('');
-  const [tokenValueEuro, setTokenValueEuro] = useState(0); // Valeur du token en Euro
-  const [tokenValueDollar, setTokenValueDollar] = useState(0); // Valeur du token en Dollar
   const [tokenValueFcfa, setTokenValueFcfa] = useState(0); // Valeur du token en FCFA
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,7 +28,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
       tokenBalance: targetAmount,  // Utilise targetAmount comme le solde des tokens
       creator,
       tokenSymbol: symbol,
-      tokenValue: { euro: tokenValueEuro, dollar: tokenValueDollar, fcfa: tokenValueFcfa },
+      tokenValue: { fcfa: tokenValueFcfa }, // Passe seulement la valeur en FCFA
     });
 
     // Réinitialiser le formulaire
@@ -39,8 +37,6 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
     setTargetAmount(0);
     setSymbol('');
     setCreator('');
-    setTokenValueEuro(0);
-    setTokenValueDollar(0);
     setTokenValueFcfa(0);
   };
 
@@ -107,33 +103,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({ onProjectCreate }
           />
         </div>
 
-        {/* Ajout des champs pour la valeur du token */}
-        <div>
-          <label htmlFor="tokenValueEuro" className="block text-sm font-medium text-gray-700 mb-2">Valeur du token en Euro</label>
-          <input
-            min='1'
-            id="tokenValueEuro"
-            type="number"
-            placeholder="Valeur du token en Euro"
-            value={tokenValueEuro}
-            onChange={(e) => setTokenValueEuro(Number(e.target.value))}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="tokenValueDollar" className="block text-sm font-medium text-gray-700 mb-2">Valeur du token en Dollar</label>
-          <input
-            min='1'
-            id="tokenValueDollar"
-            type="number"
-            placeholder="Valeur du token en Dollar"
-            value={tokenValueDollar}
-            onChange={(e) => setTokenValueDollar(Number(e.target.value))}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
+        {/* Ajout du champ pour la valeur du token en FCFA uniquement */}
         <div>
           <label htmlFor="tokenValueFcfa" className="block text-sm font-medium text-gray-700 mb-2">Valeur du token en FCFA</label>
           <input
